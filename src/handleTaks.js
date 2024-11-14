@@ -1,28 +1,41 @@
+import Task from './task.js';
+
 export default class HandleTasks {
     constructor() {
         this.tasks = [] // Array to store tasks
         this.projects = [] // Array to store the projects
+        this.taskCount = 0 // Number of tasks
+        this.projectCount = 0 // Number of projects
     }
 
     // Add or remove a task to the tasks array
     addTask(task) {
         this.tasks.push(task)
+        this.taskCount++
     }
 
     removeTask(task) {
         this.tasks.filter((t) => t !== task)
+        this.taskCount--
     }
+
+    addProjectToTask(project, task) {
+        task.setProject(project);
+    }
+
 
     getTaskList() {
         return this.tasks;
     }
 
     addProject(project) {
-        this.tasks.push(project)
+        this.projects.push(project)
+        this.projectCount++
     }
 
     removeProjects(project) {
         this.projects.filter((p) => p !== project)
+        this.projectCount--
     }
 
     getProjectsList() {
@@ -34,31 +47,24 @@ export default class HandleTasks {
     }
 
     filterByDate(day) {
-        const date = day.getDate;
-        const month = day.getMonth;
-        const year = day.getFullYear;
-
         return this.tasks.filter((t) => 
-            t.getDate.getDate == date &&
-            t.getDate.getMonth == month &&
-            t.getDate.getFullYear == year
-        )
+            t.getTaskDate().getDate() === day.getDate()
+            && t.getTaskDate().getMonth() === day.getMonth()
+            && t.getTaskDate().getFullYear() === day.getFullYear()
+        )   
     }
 
+    // Sort the tasks by date, priority, project, or completion status
     sortByDate() {
-        this.tasks.sort((a, b) => a.getDate - b.getDate);
+        this.tasks.sort((a, b) => a.getTaskDate() - b.getTaskDate());
     }
 
     sortByPriority() {
-        this.tasks.sort((a, b) => a.getPriority - b.getPriority);
-    }
-
-    sortByProject() {
-        this.tasks.sort((a, b) => a.getProject - b.getProject);
+        this.tasks.sort((a, b) => b.getPriority() - a.getPriority() );
     }
 
     sortByComplete() {
-        this.tasks.sort((a, b) => a.getIsComplete - b.getIsComplete);
+        this.tasks.sort((a, b) => b.getIsComplete() - a.getIsComplete());
     }
 
     // Get a task by its index
@@ -70,4 +76,15 @@ export default class HandleTasks {
     getProject(index) {
         return this.projects[index];
     }
+
+    // Get the number of tasks that are complete
+    getCompleteTaskCount() {
+        return this.tasks.filter((t) => t.getIsComplete).length;
+    }
+
+    // Get the number of tasks that are incomplete
+    getIncompleteTaskCount() {
+        return this.tasks.filter((t) => !t.getIsComplete).length;
+    }
+
 }

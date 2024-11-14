@@ -55,11 +55,11 @@ export default class Task {
         this.priority = priority;
     }
 
-    getDate() {
+    getTaskDate() {
         return this.date;
     }
 
-    setDate(date) {
+    setTaskDate(date) {
         this.date = date;
     }
 
