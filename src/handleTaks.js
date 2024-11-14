@@ -1,6 +1,6 @@
-import Task from './task.js';
-
 export default class HandleTasks {
+    // q:what is a good name for a class that handles the ui?
+    // a: HandleUI
     constructor() {
         this.tasks = [] // Array to store tasks
         this.projects = [] // Array to store the projects
@@ -53,6 +53,18 @@ export default class HandleTasks {
             && t.getTaskDate().getFullYear() === day.getFullYear()
         )   
     }
+
+    filterForThisWeek() {
+        const today = new Date();
+        const nextWeek = new Date();
+        nextWeek.setDate(today.getDate() + 7); // Next week
+    
+        return this.tasks.filter((t) => {
+            const taskDate = new Date(t.getTaskDate()); // Copy the date
+            return taskDate >= today && taskDate <= nextWeek;
+        });
+    }
+    
 
     // Sort the tasks by date, priority, project, or completion status
     sortByDate() {

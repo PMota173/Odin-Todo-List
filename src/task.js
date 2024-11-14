@@ -9,7 +9,6 @@ export default class Task {
         this.project = null;
     }
 
-
     // Getters and Setters
     setProject(project) {
         this.project = project;

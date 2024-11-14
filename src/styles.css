@@ -1,0 +1,159 @@
+/* color variables */
+:root {
+
+    --text-color: #1f1f1f;
+    --text-color-soft: #828282;
+    --text-color-intense: #535353;
+
+    --menu-bg: #e5e5e5;
+    --main-bg: #f5f5f5;
+    --info-bg: #e5e5e5;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    color: var(--text-color);
+}
+h2 {
+    color: var(--text-color);
+}
+h3 {
+    color: var(--text-color);
+}
+h4 {
+    color: var(--text-color-intense);
+}
+
+p {
+    color: var(--text-color-intense);
+}
+
+li {
+    color: var(--text-color-intense);
+}
+
+
+
+body {
+    display: grid;
+    margin: 0;
+    height: 100vh;
+    background-color: var(--main-bg);
+    grid-template-columns: 250px 2fr 1fr;
+    padding: 20px;
+}
+
+.menu, .main, .info {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 20px;
+}
+
+.menu {
+    background-color: var(--menu-bg);
+    color: var(--text-color);
+    border-radius: 15px;
+}
+
+.menu-icon span {
+    display: block;
+    width: 20px;
+    height: 3px;
+    background-color: var(--text-color);
+    margin: 5px 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+
+}
+
+.menu-icon:hover {
+    cursor: pointer;
+    transform: translateY(-2px);
+    transition: ease-in-out 0.2s all;
+}
+
+.tasks-title , .projects-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: smaller;
+}
+
+.tasks-selection, .projects-selection {
+    font-size: 1.1rem;
+}
+
+.menu .tasks-selection {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+.menu .tasks-selection li {
+    list-style: none;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: var(--info-bg);
+    color: var(--text-color);
+    font-weight: 700;
+}
+.selected::before {
+    content: "•";
+    margin-right: 10px;
+}
+
+.menu .projects-section {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--info-bg);
+}
+
+
+.create-project .plus {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+.create-project {
+    position: relative;
+    padding: 0;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-color-intense);
+    display: inline-block;
+    align-content: center;
+    margin: 0;
+}
+  
+.create-project::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0.1em;
+    background-color: var(--text-color-soft);
+    opacity: 0;
+    transition: opacity 300ms, transform 300ms;
+}
+
+.create-project:hover::after,
+.create-project:focus::after {
+    opacity: 1;
+    transform: translate3d(0, 0.2em, 0);
+}

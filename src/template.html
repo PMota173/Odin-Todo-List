@@ -3,9 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TodoList</title>
+    <title>Planify</title>
 </head>
 <body>
-    
+    <div class="menu">
+        <div class="logo">
+            <h1>Planify</h1>
+            <div class="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div style="border-top: 2px solid #ccc; height: 1px; width: 100%;"></div>
+        <h3 class="tasks-title">Tasks</h3>
+        <ul class="tasks-selection">
+            <li class="option-task">All</li>
+            <li class="selected option-task">Today</li>
+            <li class="option-task">This week</li>
+            <li class="option-task">Overdue</li>
+        </ul>
+        <h3 class="projects-title">Projects</h3>
+        <div class="projects-section">
+            <h4 class="create-project"><span class="plus">+</span><span class="text">Create Project</span></h4>
+            <ul class="projects-selection"></ul>
+        </div>
+    </div>
+    <div class="main">
+        <div class="selected-day">Today</div>
+    </div>
+    <div class="info"></div>
 </body>
 </html>
