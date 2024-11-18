@@ -2,12 +2,15 @@
 :root {
 
     --text-color: #1f1f1f;
-    --text-color-soft: #828282;
     --text-color-intense: #535353;
+    --text-color-soft: #828282;
 
     --menu-bg: #e5e5e5;
     --main-bg: #f5f5f5;
     --info-bg: #e5e5e5;
+
+    --button-green: #55a858;
+    --button-red: #f85d51;
 }
 
 * {
@@ -52,7 +55,7 @@ body {
     padding: 5px 20px;
 }
 
-.menu {
+.menu { 
     background-color: var(--menu-bg);
     color: var(--text-color);
     border-radius: 15px;
@@ -98,13 +101,68 @@ body {
 .menu .tasks-selection {
     display: flex;
     flex-direction: column;
+    gap: 10px;
     margin: 0;
     padding: 0;
 }
 
-.menu .tasks-selection li {
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.option-task {
     list-style: none;
     cursor: pointer;
+}
+
+
+.menu .projects-section {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--info-bg);
+    gap: 20px;
+}
+
+
+.create-project .plus {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+.create-project {
+    font-size: 1.2rem;
+}
+
+.anima-below {
+    position: relative;
+    padding: 0;
+    cursor: pointer;
+    display: inline-block;
+    align-content: center;
+    margin: 0;
+}
+
+.anima-below::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0.1em;
+    background-color: var(--text-color-soft);
+    opacity: 0;
+    transform: translate3d(-10%, 0, 0);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.anima-below:hover::after,
+.anima-below:focus::after {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
 }
 
 .selected {
@@ -117,43 +175,144 @@ body {
     margin-right: 10px;
 }
 
-.menu .projects-section {
+.selected::after {
+    background-color: var(--text-color);
+}
+
+.project-input-button {
+    background-color: var(--button-green);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    border-radius: 12px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.project-input-button:nth-last-child(1){
+    background-color: var(--button-red);
+}
+
+.project-input {
+    border: solid 1.5px var(--text-color);
+    border-radius: 1rem;
+    background: none;
+    padding: 1rem;
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: border 150ms cubic-bezier(0.4,0,0.2,1);
+}
+
+.project-input:focus, project-input:valid {
+    outline: none;
+    border: 2px solid var(--text-color);
+}
+
+.project-input:focus ~ label, project-input:valid ~ label {
+    transform: translateY(-50%) scale(0.8);
+    background-color: var(--text-color);
+    padding: 0 .2em;
+    color: var(--text-color);
+}
+
+.create-project-container {
     display: flex;
     flex-direction: column;
-    background-color: var(--info-bg);
+    gap: 10px;
 }
 
-
-.create-project .plus {
-    font-size: 1.5rem;
-    margin-right: 10px;
+.buttons-div {
+    display: flex;
+    gap: 10px;
 }
 
-.create-project {
-    position: relative;
+.main-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+}
+
+.main-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 10px;
     padding: 0;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: var(--text-color-intense);
-    display: inline-block;
-    align-content: center;
-    margin: 0;
-}
-  
-.create-project::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0.1em;
-    background-color: var(--text-color-soft);
-    opacity: 0;
-    transition: opacity 300ms, transform 300ms;
+    color: var(--text-color);
 }
 
-.create-project:hover::after,
-.create-project:focus::after {
-    opacity: 1;
-    transform: translate3d(0, 0.2em, 0);
+.main-header span {
+    font-size: 1.5rem;
+    padding: 5px 10px;
+    border: 1px solid var(--text-color-intense);
+    border-radius: 10px;
+    color: var(--text-color-intense);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+.create-task .plus:hover {
+    animation: plusRotate 1s;
+}
+
+.create-task {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 20px 0;
+    cursor: pointer;
+    background-color: var(--menu-bg);
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: var(--text-color-intense);
+    border: 0.5px solid var(--text-color-soft);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
+}
+
+.create-task:hover {
+    cursor: pointer;
+    transform: translateY(-2px);
+    transition: ease-in-out 0.2s all;
+}
+
+
+.create-task:hover .plus {
+    animation: plusRotate 1s;
+}
+
+@keyframes plusRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.task {
+    display: grid;
+    grid-template-columns: 20px 2fr 1fr 20px ;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--info-bg);
+    border-radius: 10px;
+    color: var(--text-color-intense);
+    border: 0.5px solid var(--text-color-soft);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
+}
+
+.details {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+

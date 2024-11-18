@@ -1,6 +1,4 @@
 export default class HandleTasks {
-    // q:what is a good name for a class that handles the ui?
-    // a: HandleUI
     constructor() {
         this.tasks = [] // Array to store tasks
         this.projects = [] // Array to store the projects
@@ -42,27 +40,33 @@ export default class HandleTasks {
         return this.projects;
     }
     
-    filterByProject(project) {
-        return this.tasks.filter((t) => t.project === project)
+    filterByProject(taskList, project) {
+        return taskList.filter((t) => t.project === project)
     }
 
-    filterByDate(day) {
-        return this.tasks.filter((t) => 
-            t.getTaskDate().getDate() === day.getDate()
+    filterByDate(taskList, day) {
+        return taskList.filter((t) =>
+            (t.getTaskDate() != null) &&
+            (t.getTaskDate().getDate() === day.getDate()
             && t.getTaskDate().getMonth() === day.getMonth()
-            && t.getTaskDate().getFullYear() === day.getFullYear()
+            && t.getTaskDate().getFullYear() === day.getFullYear())
         )   
     }
 
-    filterForThisWeek() {
+    filterForThisWeek(taskList) {
         const today = new Date();
         const nextWeek = new Date();
         nextWeek.setDate(today.getDate() + 7); // Next week
-    
-        return this.tasks.filter((t) => {
+        return taskList.filter((t) => {
             const taskDate = new Date(t.getTaskDate()); // Copy the date
-            return taskDate >= today && taskDate <= nextWeek;
+            return (t.getTaskDate() != null) && (taskDate >= today && taskDate <= nextWeek);
         });
+    }
+
+    filterOverdue(taskList) {
+        const day = new Date();
+        day.setHours(0, 0, 0, 0);
+        return taskList.filter((t) => (t.getTaskDate() != null && !t.getIsComplete()) && (t.getTaskDate() < day && !t.getIsComplete()));
     }
     
 
