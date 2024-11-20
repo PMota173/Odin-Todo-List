@@ -7,6 +7,65 @@ export default function HandleUI(handleTasks) {
     let inputOpen = false;
     let taskQuantity = taskList.length;
 
+    function createTask(task) {
+        /* 
+        <div class="task">
+            <input type="checkbox">
+            
+            <div class="task-title">go to the gym</div>
+            <div class="data">
+                <div class="date">2020-07-01</div>
+            </div>
+            <div class="details"> > </div></div>
+        </div>
+        */
+
+
+    }
+
+    (function openCreateTaskModal() {
+        const modal = document.querySelector(".modal");
+        const overlay = document.querySelector(".overlay");
+        const openModalBtn = document.querySelector(".btn-open");
+        const closeModalBtn = document.querySelector(".btn-close");
+        const selectProject = document.querySelector('.select-project')
+        const projectLabel = document.querySelector('.project-label')
+
+
+        const openModal = function () {
+            modal.classList.remove("hidden");
+            overlay.classList.remove("hidden");
+            if (selectProject.childElementCount === 0) {
+                selectProject.classList.add('hidden')
+                projectLabel.classList.add('hidden')
+            }
+            else {
+                selectProject.classList.remove('hidden')
+                projectLabel.classList.remove('hidden')
+            }
+        };
+
+        const closeModal = function () {
+            modal.classList.add("hidden");
+            overlay.classList.add("hidden");
+        };
+
+
+
+        openModalBtn.addEventListener("click", openModal);          
+        closeModalBtn.addEventListener("click", closeModal);
+        overlay.addEventListener("click", closeModal);
+    })()
+
+    function addProjectToOptions (project) {
+        const select = document.querySelector('.select-project')
+            const option = document.createElement('option')
+            option.textContent = project
+            option.value = project
+            select.appendChild(option)
+    }
+    
+
     function createProject() {
         const createButton = document.querySelector('.create-project')
 
@@ -21,6 +80,7 @@ export default function HandleUI(handleTasks) {
             
             projectInput.setAttribute('type', 'text')
             projectInput.setAttribute('placeholder', 'Project name')
+            projectInput.setAttribute('maxlength', '20')
             projectInput.classList.add('project-input')
         
             createButton.parentElement.appendChild(projectInput)
@@ -59,6 +119,7 @@ export default function HandleUI(handleTasks) {
                     if (project) {
                         const projectList = document.querySelector('.project-list');
                         const projectElement = document.createElement('li');
+                        
                         projectElement.textContent = project;
                         projectElement.classList.add('project');
                         projectElement.classList.add('option-task');
@@ -74,6 +135,7 @@ export default function HandleUI(handleTasks) {
                         projectContainer.remove();
                         inputOpen = false
 
+                        addProjectToOptions(project)
                         handleTasks.addProject(project)
 
                         selectDaysFilterUI(listOfOptions)

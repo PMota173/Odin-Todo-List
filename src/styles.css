@@ -11,6 +11,7 @@
 
     --button-green: #55a858;
     --button-red: #f85d51;
+    --button-yellow: #f8c451;
 }
 
 * {
@@ -45,7 +46,7 @@ body {
     margin: 0;
     height: 100vh;
     background-color: var(--main-bg);
-    grid-template-columns: 250px 2fr 1fr;
+    grid-template-columns: 300px 1fr 400px;
     padding: 20px;
 }
 
@@ -119,14 +120,12 @@ body {
     cursor: pointer;
 }
 
-
 .menu .projects-section {
     display: flex;
     flex-direction: column;
     background-color: var(--info-bg);
     gap: 20px;
 }
-
 
 .create-project .plus {
     font-size: 1.5rem;
@@ -244,8 +243,8 @@ body {
 .main-header span {
     font-size: 1.5rem;
     padding: 5px 10px;
-    border: 1px solid var(--text-color-intense);
-    border-radius: 10px;
+    border-top: 1px solid var(--text-color-intense);
+    border-bottom: 1px solid var(--text-color-intense);
     color: var(--text-color-intense);
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
@@ -257,25 +256,34 @@ body {
     display: flex;
     gap: 10px;
     align-items: center;
-    margin: 20px 0;
     cursor: pointer;
-    background-color: var(--menu-bg);
-    border-radius: 10px;
     padding: 10px 20px;
     color: var(--text-color-intense);
-    border: 0.5px solid var(--text-color-soft);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
+    border-top: 1px solid var(--text-color-soft);
+    border-bottom: 1px solid var(--text-color-soft);
+    background-color: var(--info-bg);
 }
 
 .create-task:hover {
     cursor: pointer;
-    transform: translateY(-2px);
-    transition: ease-in-out 0.2s all;
+    animation: backgroundDarken 0.5s;
+    background-color: #bababa57;
+
 }
 
 
 .create-task:hover .plus {
     animation: plusRotate 1s;
+}
+
+@keyframes backgroundDarken {
+    0% {
+        background-color: var(--info-bg);
+    }
+    100% {
+        background-color: #bababa57;
+    }
 }
 
 @keyframes plusRotate {
@@ -301,18 +309,209 @@ body {
     gap: 10px;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
+    padding: 15px 20px;
     background-color: var(--info-bg);
-    border-radius: 10px;
     color: var(--text-color-intense);
-    border: 0.5px solid var(--text-color-soft);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
 }
 
-.details {
+.details-button {
     color: var(--text-color);
     font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
 }
 
+.task-creation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-creation-form input , .task-creation-form textarea, .select-project {
+    border: solid 1.5px var(--text-color);
+    border-radius: 1rem;
+    background: none;
+    padding: 1rem;
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: border 150ms cubic-bezier(0.4,0,0.2,1);
+}
+
+.task-creation-form input:focus, .task-creation-form textarea:focus {
+    outline: none;
+    border: 2px solid var(--text-color);
+}
+
+#task-description {
+    height: 100px;
+    padding: 10px;
+    resize: none;
+}
+
+#task-due-date {
+    width: 50%;
+}
+
+.radios-task-priority {
+    display: flex;
+    gap: 20px;
+}
+
+.radios-task-priority {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .radios-task-priority label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+input[type="radio"] {
+    display: none; 
+}
+
+.select-project {
+    width: 50%;
+}
+  
+.radio-color {
+    height: 20px;
+    width: 20px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    margin-right: 8px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+  
+#task-priority-red + .radio-color {
+    border-color: var(--button-red);
+}
+#task-priority-yellow + .radio-color {
+    border-color: var(--button-yellow);
+}
+#task-priority-green + .radio-color {
+    border-color: var(--button-green);
+}
+  
+#task-priority-red:checked + .radio-color {
+    background-color: var(--button-red);
+}
+#task-priority-yellow:checked + .radio-color {
+    background-color: var(--button-yellow);
+}
+#task-priority-green:checked + .radio-color {
+    background-color: var(--button-green);
+}
+  
+.last-line {
+    margin-left: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.modal-header div {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-color-intense);
+    cursor: pointer;
+}
+
+.add-task-btn {
+  display: inline-block;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem;
+  letter-spacing: .15rem;
+  transition: all .3s;
+  position: relative;
+  z-index: 1;
+}
+
+.add-task-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--text-color-intense); /* lighten(#535353, 15%) */
+  border-radius: 10px;
+  z-index: -2;
+}
+
+.add-task-btn::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: var(--button-green); /* darken(#535353, 15%) */
+  transition: all .3s;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+.add-task-btn:hover {
+  color: #fff;
+}
+
+.add-task-btn:hover::before {
+  width: 100%;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 450px;
+    padding: 1.3rem;
+    min-height: 250px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    z-index: 70;
+    padding-bottom: 30px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 60;
+}
+
+.hidden {
+    display: none;
+}

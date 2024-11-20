@@ -35,24 +35,64 @@
             <h1 class="filter-loaded"></h1>
             <span class="tasks-quantity"></span>
         </div>
-        <div style="border-top: 2px solid #ccc; height: 1px; width: 100%;"></div>
         <div>
-            <div class="create-task"><span class="plus">+</span><span>Add New Task</span></div>
-        </div>
-        <div style="border-top: 2px solid #ccc; height: 1px; width: 100%;"></div>
-        
-        <div class="task-list">
-            <div class="task">
-                <input type="checkbox">
-                
-                <div class="task-title">go to the gym</div>
-                <div class="data">
-                    <div class="date">2020-07-01</div>
+            <div class="create-task btn btn-open"><span class="plus">+</span><span>Add New Task</span></div>
+            <div class="task-list"> 
+                <div class="task">
+                    <input type="checkbox">
+                    
+                    <div class="task-title">go to the gym</div>
+                    <div class="data">
+                        <div class="date">2020-07-01</div>
+                    </div>
+                    <div class="details-button"> > </div></div>
                 </div>
-                <div class="details"> > </div>
-            </div>
         </div>
     </div>
     <div class="info"></div>
+
+    <section class="modal hidden">
+        <div class="modal-header">
+            <h2>New Task</h2>
+            <div class="btn-close" style="margin-right: 20px;">x</div>
+        </div>
+        <form class="task-creation-form" action="">
+            <label for="task-title">Title</label>
+            <input type="text" id="task-title" name="task-title" required>
+            
+            <label for="task-description">Description</label>
+            <textarea id="task-description" name="task-description"></textarea>
+            
+            <label for="task-due-date">Due Date</label>
+            <input type="date" id="task-due-date" name="task-due-date">
+            
+            <label class="project-label" for="task-project">Project</label>
+            <select name="task-project" id="task-project" class="select-project">
+                <option value="0">No Project</option>
+            </select>
+
+            <label for="task-priority">Priority</label>
+            <div class="last-line">
+                <div class="radios-task-priority">
+                    <label for="task-priority-green">
+                        <input type="radio" name="task-priority" id="task-priority-green">
+                        <span class="radio-color"></span>
+                    </label>
+                    <label for="task-priority-yellow">
+                        <input type="radio" name="task-priority" id="task-priority-yellow">
+                        <span class="radio-color"></span>
+                    </label>
+                    <label for="task-priority-red">
+                        <input type="radio" name="task-priority" id="task-priority-red">
+                        <span class="radio-color"></span>
+                    </label>
+                    
+                </div>
+                <button class="add-task-btn" type="submit">Save</button>
+            </div>  
+        </form>
+    </section>
+    <div class="overlay hidden"></div>
+    </div>
 </body>
 </html>
