@@ -38,18 +38,10 @@
         <div>
             <div class="create-task btn btn-open"><span class="plus">+</span><span>Add New Task</span></div>
             <div class="task-list"> 
-                <div class="task">
-                    <input type="checkbox">
-                    
-                    <div class="task-title">go to the gym</div>
-                    <div class="data">
-                        <div class="date">2020-07-01</div>
-                    </div>
-                    <div class="details-button"> > </div></div>
-                </div>
         </div>
     </div>
-    <div class="info"></div>
+    <div class="info">
+    </div>
 
     <section class="modal hidden">
         <div class="modal-header">
@@ -58,10 +50,10 @@
         </div>
         <form class="task-creation-form" action="">
             <label for="task-title">Title</label>
-            <input type="text" id="task-title" name="task-title" required>
+            <input type="text" id="task-title" autocomplete="false" spellcheck="false" name="task-title" required>
             
             <label for="task-description">Description</label>
-            <textarea id="task-description" name="task-description"></textarea>
+            <textarea id="task-description" spellcheck="false" name="task-description"></textarea>
             
             <label for="task-due-date">Due Date</label>
             <input type="date" id="task-due-date" name="task-due-date">
@@ -75,7 +67,7 @@
             <div class="last-line">
                 <div class="radios-task-priority">
                     <label for="task-priority-green">
-                        <input type="radio" name="task-priority" id="task-priority-green">
+                        <input type="radio" name="task-priority" id="task-priority-green" checked>
                         <span class="radio-color"></span>
                     </label>
                     <label for="task-priority-yellow">
@@ -88,7 +80,7 @@
                     </label>
                     
                 </div>
-                <button class="add-task-btn" type="submit">Save</button>
+                <button class="add-task-btn" type="button">Save</button>
             </div>  
         </form>
     </section>

@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url(./JetBrainsMono-Medium.woff2) format('.woff2');
+    font-style: normal;
+}
+* {
+    font-family: 'JetBrains Mono', monospace;
+    box-sizing: border-box;
+}
 /* color variables */
 :root {
 
@@ -12,10 +21,6 @@
     --button-green: #55a858;
     --button-red: #f85d51;
     --button-yellow: #f8c451;
-}
-
-* {
-    box-sizing: border-box;
 }
 
 h1 {
@@ -305,7 +310,7 @@ body {
 
 .task {
     display: grid;
-    grid-template-columns: 20px 2fr 1fr 20px ;
+    grid-template-columns: 20px 2fr 1fr 20px 20px ;
     gap: 10px;
     align-items: center;
     justify-content: space-between;
@@ -339,8 +344,7 @@ body {
 }
 
 .task-creation-form input:focus, .task-creation-form textarea:focus {
-    outline: none;
-    border: 2px solid var(--text-color);
+    outline: 1px solid var(--text-color);
 }
 
 #task-description {
@@ -440,6 +444,7 @@ input[type="radio"] {
   border: none;
   border-radius: 10px;
   color: #fff;
+  cursor: pointer;
   font-size: 1rem;
   letter-spacing: .15rem;
   transition: all .3s;
@@ -481,6 +486,7 @@ input[type="radio"] {
 }
 
 .modal {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -514,4 +520,26 @@ input[type="radio"] {
 
 .hidden {
     display: none;
+}
+
+.priority-red {
+    background-color: var(--button-red);
+    color: var(--text-color);
+}
+
+.priority-yellow {
+    background-color: var(--button-yellow);
+    color: var(--text-color);
+}
+
+.priority-green {
+    background-color: var(--button-green);
+    color: var(--text-color);
+}
+
+.checked-task {
+    filter: blur(0.4px);
+}
+.checked-task .task-title {
+    text-decoration: line-through;
 }
