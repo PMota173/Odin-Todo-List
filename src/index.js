@@ -13,9 +13,6 @@ const handleTasks = new HandleTasks();
 const handleUI = new HandleUI(handleTasks);
 handleUI.createTask()
 
-handleUI.selectDaysFilterUI(handleUI.getOptions())
-handleUI.createProject()
-handleUI.updateFilterSelected()
 
 
 // filter tasks FilterTasks(handleTasks, filter, project, date)

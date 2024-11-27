@@ -13,14 +13,18 @@ export default class HandleTasks {
     }
 
     removeTask(task) {
-        this.tasks.filter((t) => t !== task)
+        this.tasks = this.tasks.filter((t) => t !== task)
         this.taskCount--
     }
 
+    // Add or remove a task to a project
     addProjectToTask(project, task) {
         task.setProject(project);
     }
 
+    removeProjectFromTask(task) {
+        task.setProject(null);
+    }
 
     getTaskList() {
         return this.tasks;

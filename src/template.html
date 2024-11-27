@@ -29,6 +29,11 @@
             <ul class="project-list">
             </ul>
         </div>
+
+        <div>
+         
+
+        </div>
     </div>
     <div class="main">
         <div class="main-header">
@@ -37,10 +42,57 @@
         </div>
         <div>
             <div class="create-task btn btn-open"><span class="plus">+</span><span>Add New Task</span></div>
-            <div class="task-list"> 
+            <div class="task-list"></div>
         </div>
-    </div>
-    <div class="info">
+    </div>  
+    <div class="info hidden">
+        <div class="info-header">
+            <div id="priority-color" style="height: 20px; width: 20px; border-radius: 50%;"></div>
+            <h2>Task</h2>
+        </div>
+        <form action="" class="info-form">
+            <div>
+                <label for="task-info-title">Name:</label>
+                <input type="text" id="task-info-title" autocomplete="off" spellcheck="false" name="task-info-title">
+            </div>
+
+            <div>
+                <label for="task-info-description">Description:</label>
+                <textarea id="task-info-description" spellcheck="false" name="task-info-description"></textarea>
+            </div>
+            
+            <div>
+                <label for="task-info-due-date">Due Date:</label>
+                <input type="date" id="task-info-due-date" name="task-info-due-date">
+            </div>
+            <div>
+                <label class="project-label" for="task-info-project">Project:</label>
+                <select name="task-info-project" id="task-info-project" class="select-project-info">
+                    <option value="0">No Project</option>
+                </select>
+            </div>
+    
+            <label for="" >Priority:</label>
+            <section class="radios-task-priority-info">
+                <label for="task-priority-green-info">
+                    <input type="radio" name="task-priority-info" id="task-priority-green-info">
+                    <span class="radio-color-info"></span>
+                </label>
+                <label for="task-priority-yellow-info">
+                    <input type="radio" name="task-priority-info" id="task-priority-yellow-info">
+                    <span class="radio-color-info"></span>
+                </label>
+                <label for="task-priority-red-info">
+                    <input type="radio" name="task-priority-info" id="task-priority-red-info">
+                    <span class="radio-color-info"></span>
+                </label>
+            </section>
+            <div class="info-buttons-div">
+                <button class="delete-task-btn info-btn" type="button">Delete</button>
+                <button class="cancel-task-btn info-btn" type="button">Cancel</button>
+                <button class="save-task-btn info-btn" type="button">Save</button>
+            </div>
+        </form>
     </div>
 
     <section class="modal hidden">
@@ -50,7 +102,7 @@
         </div>
         <form class="task-creation-form" action="">
             <label for="task-title">Title</label>
-            <input type="text" id="task-title" autocomplete="false" spellcheck="false" name="task-title" required>
+            <input type="text" id="task-title" autocomplete="off" spellcheck="false" name="task-title" required>
             
             <label for="task-description">Description</label>
             <textarea id="task-description" spellcheck="false" name="task-description"></textarea>

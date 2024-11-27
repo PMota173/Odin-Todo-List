@@ -29,6 +29,8 @@ export default function HandleUI(handleTasks) {
     let listOfOptions = getOptions();
     let inputOpen = false;
     let taskQuantity = taskList.length;
+    let taskSelectedInfo;
+    let filterSelected = document.querySelector('.selected');
 
     // Cache selectors for better performance
     const tasksContainer = document.querySelector('.task-list');
@@ -38,9 +40,96 @@ export default function HandleUI(handleTasks) {
     const closeModalBtn = document.querySelector('.btn-close');
     const saveButton = document.querySelector('.add-task-btn');
     const selectProject = document.querySelector('.select-project');
+    const selectProjectInfo = document.querySelector('.select-project-info');
     const projectLabel = document.querySelector('.project-label');
     const createButton = document.querySelector('.create-project');
     const projectList = document.querySelector('.project-list');
+    const infoDiv = document.querySelector('.info');
+    const body = document.querySelector('body');
+    const taskInfoTitle = document.querySelector('#task-info-title');
+    const taskInfoDescription = document.querySelector('#task-info-description');
+    const taskInfoDate = document.querySelector('#task-info-due-date');
+    const priorityColor = document.querySelector('#priority-color');
+    const deleteTaskInfo = document.querySelector('.delete-task-btn');
+    const saveTaskInfo = document.querySelector('.save-task-btn');
+    const cancelTaskInfo = document.querySelector('.cancel-task-btn');
+
+    // Task Information Event Listeners
+    saveTaskInfo.addEventListener('click', () => {
+        const taskTitle = taskInfoTitle.value;
+        if (taskTitle.trim() === '') {
+            taskInfoTitle.classList.add('error');
+            setTimeout(() => {
+                taskInfoTitle.classList.remove('error');
+            }, 2000);
+            return;
+        };
+
+        const taskDescription = taskInfoDescription.value;
+        const taskDueDate = taskInfoDate.value;
+        const taskPriority = document.querySelector('input[name="task-priority-info"]:checked');
+        const taskProjectValue = selectProjectInfo.options[selectProjectInfo.selectedIndex]?.value;
+
+        const taskDueDateValue = taskDueDate ? new Date(
+            taskDueDate.slice(0, 4), 
+            taskDueDate.slice(5, 7) - 1, 
+            taskDueDate.slice(8, 10)
+        ) : null;
+
+        let taskPriorityValue;
+        switch (taskPriority.id) {
+            case 'task-priority-green-info':
+                taskPriorityValue = '1'
+                break
+            case 'task-priority-yellow-info':
+                taskPriorityValue = '2'
+                break
+            case 'task-priority-red-info':
+                taskPriorityValue = '3'
+                break
+        }
+
+        taskSelectedInfo.setName(taskTitle);
+        taskSelectedInfo.setDescription(taskDescription);
+        taskSelectedInfo.setPriority(taskPriorityValue);
+        taskSelectedInfo.setTaskDate(taskDueDateValue);
+         
+        if (taskProjectValue !== '0') {
+            handleTasks.addProjectToTask(taskProjectValue, taskSelectedInfo);
+        }
+        else {
+            handleTasks.removeProjectFromTask(taskSelectedInfo);
+        }
+
+        
+        handleTasks.getTaskList().forEach(task => createTaskUI(task));
+        updateLists();
+    
+        updateFilterSelected();
+
+        toggleTaskInformation();
+    });
+
+    deleteTaskInfo.addEventListener('click', () => {
+
+        handleTasks.removeTask(taskSelectedInfo);
+        tasksContainer.innerHTML = '';
+
+        handleTasks.getTaskList().forEach(task => createTaskUI(task));
+        updateLists();
+    
+        updateFilterSelected();
+
+        toggleTaskInformation();
+        
+        taskSelectedInfo = null;
+    });
+
+    cancelTaskInfo.addEventListener('click', () => {
+        toggleTaskInformation();
+        taskSelectedInfo = null;
+    });
+
 
     // Task UI Creation
     function createTaskUI(task) {
@@ -49,6 +138,16 @@ export default function HandleUI(handleTasks) {
 
         const checkbox = createElement('input', ['checkbox'], { type: 'checkbox' });
         taskDiv.appendChild(checkbox);
+
+        // Ensure that the task is marked as complete if it is
+        if (task.getIsComplete()) {
+            taskDiv.classList.add('checked-task');
+            checkbox.checked = true;
+        }
+        else {
+            taskDiv.classList.remove('checked-task');
+            checkbox.checked = false;
+        }
 
         checkbox.addEventListener('click', () => {
             task.flipIsComplete();
@@ -75,13 +174,24 @@ export default function HandleUI(handleTasks) {
         const details = createElement('div', ['details-button']);
         details.textContent = '>';
         taskDiv.appendChild(details);
+
+        details.addEventListener('click', () => {
+            taskSelectedInfo = task;
+            loadTaskInformation(taskSelectedInfo);
+        });
     }
 
     // Task Creation
     function createTask() {
         saveButton.addEventListener('click', () => {
             const taskTitle = document.querySelector('#task-title');
-            if (taskTitle.value.trim() === '') return;
+            if (taskTitle.value.trim() === '') {
+                taskTitle.classList.add('error');
+                setTimeout(() => {
+                    taskTitle.classList.remove('error');
+                }, 2000);
+                return;
+            };
 
             const taskDescription = document.querySelector('#task-description').value;
             const taskDueDate = document.querySelector('#task-due-date').value;
@@ -109,6 +219,8 @@ export default function HandleUI(handleTasks) {
 
             const task = new Task(taskTitle.value, false, taskDescription, taskPriorityValue, taskDueDateValue);
             handleTasks.addTask(task);
+
+            console.log(handleTasks.getTaskList());
 
             if (taskProjectValue !== '0') {
                 handleTasks.addProjectToTask(taskProjectValue, task);
@@ -208,19 +320,85 @@ export default function HandleUI(handleTasks) {
             projectInput.focus();
         });
     }
-
+    
     function loadFilteredTasks(filteredTasks) {
         tasksContainer.innerHTML = '';
         filteredTasks.forEach(task => createTaskUI(task));
     }
-
-    // Task Information
-    function openTaskInformation(task) {
     
+    // Task Information
+    function loadTaskInformation(task) {
+        toggleTaskInformation();
+
+        const taskInfoGreen = document.querySelector('#task-priority-green-info');
+        const taskInfoYellow = document.querySelector('#task-priority-yellow-info');
+        const taskInfoRed = document.querySelector('#task-priority-red-info');
+
+        taskInfoTitle.value = task.getName();
+        taskInfoDescription.value = task.getDescription();
+
+        if (task.getTaskDate() !== null) {
+            taskInfoDate.value = task.getTaskDate().toISOString().split('T')[0]
+        }
+        else {
+            taskInfoDate.value = '';
+        }
+        
+
+        const project = task.getProject();
+        if (project) {
+            const projectIndex = [...selectProjectInfo.options].findIndex(op => op.value === project);
+            selectProjectInfo.selectedIndex = projectIndex;
+        }
+        else {
+            selectProjectInfo.selectedIndex = 0;
+        }
+
+        const priority =  task.getPriority();
+        priorityColor.classList.remove('priority-yellow', 'priority-red', 'priority-green');
+        switch (priority) {
+            case '1':
+                taskInfoGreen.checked = true;
+                taskInfoYellow.checked = false;
+                taskInfoRed.checked = false;
+                priorityColor.classList.add('priority-green');
+                break;
+            case '2':
+                taskInfoGreen.checked = false;
+                taskInfoYellow.checked = true;
+                taskInfoRed.checked = false;
+                priorityColor.classList.add('priority-yellow');
+                break;
+            case '3':
+                taskInfoGreen.checked = false;
+                taskInfoYellow.checked = false;
+                taskInfoRed.checked = true;
+                priorityColor.classList.add('priority-red');
+                break;
+            default:
+                taskInfoGreen.checked = true;
+                taskInfoYellow.checked = false;
+                taskInfoRed.checked = false;
+                priorityColor.classList.add('priority-green');
+        }
+    }
+    
+    // Show / Hide task information
+    function toggleTaskInformation() {
+        if (infoDiv.classList.contains('hidden')) {
+            infoDiv.classList.remove('hidden');
+            body.style.gridTemplateColumns = '300px 1fr 400px';
+        } else {
+            infoDiv.classList.add('hidden');
+            body.style.gridTemplateColumns = '300px 1fr 0px';
+        }
     }
 
-    // Filter Management
+    // Updates the task quantity and the selected filter
     function updateFilterSelected() {
+        filterSelected = document.querySelector('.selected')
+        loadSelectedFilter(filterSelected.textContent);
+
         const selectedFilter = document.querySelector('.filter-loaded');
         const quantity = document.querySelector('.tasks-quantity');
         const selectedOption = [...listOfOptions].find(op => op.classList.contains('selected'));
@@ -284,13 +462,15 @@ export default function HandleUI(handleTasks) {
         const option = createElement('option', [], { value: project });
         option.textContent = project;
         selectProject.appendChild(option);
+        selectProjectInfo.appendChild(option.cloneNode(true));
     }
 
     // Initialize functionality
     openCreateTaskModal();
     createTask();
     createProject();
-    selectDaysFilterUI();
+    selectDaysFilterUI(listOfOptions);
+    updateFilterSelected();
 
     return {
         selectDaysFilterUI,
@@ -299,5 +479,6 @@ export default function HandleUI(handleTasks) {
         updateLists,
         updateFilterSelected,
         createTask,
+        toggleTaskInformation,
     };
 }
