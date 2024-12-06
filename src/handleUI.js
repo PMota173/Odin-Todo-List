@@ -29,8 +29,55 @@ export default function HandleUI(handleTasks) {
     let listOfOptions = getOptions();
     let inputOpen = false;
     let taskQuantity = taskList.length;
-    let taskSelectedInfo;
+    let taskSelectedInfo = new Task();    
     let filterSelected = document.querySelector('.selected');
+
+    // Save and Load Task List to Local Storage
+    function saveTaskListToStorage(taskList) {
+        if (localStorage.length > 0) {
+            Object.keys(localStorage).forEach(key => {
+                if (key !== 'projects') {
+                    localStorage.removeItem(key);
+                }
+            });
+        }
+        taskList.forEach(task => {
+            localStorage.setItem(task.getName(), JSON.stringify(task));
+        });
+    }
+
+    function saveProjectsToStorage() {
+        const projects = handleTasks.getProjectsList();
+        localStorage.removeItem('projects');
+        localStorage.setItem('projects', JSON.stringify(projects));
+    }
+
+    function loadTaskListFromStorage() {
+        loadProjectsFromStorage();
+        Object.keys(localStorage).forEach(key => {
+            if (key === 'projects') return; 
+            const task = JSON.parse(localStorage.getItem(key));
+            const data = task.date ? new Date(task.date) : null;
+            const newTask = new Task(task.name, task.isComplete, task.description, task.priority, data);
+            
+            if (task.project) {
+                handleTasks.addProjectToTask(task.project, newTask);
+            }
+    
+            handleTasks.addTask(newTask);
+            createTaskUI(newTask);
+        });
+    }
+
+    function loadProjectsFromStorage() {
+        const projects = JSON.parse(localStorage.getItem('projects'));
+        if (projects) {
+            projects.forEach(project => {
+                projectInput.value = project;
+                createProject();
+            });
+        }
+    }
 
     // Cache selectors for better performance
     const tasksContainer = document.querySelector('.task-list');
@@ -108,6 +155,9 @@ export default function HandleUI(handleTasks) {
         updateFilterSelected();
 
         toggleTaskInformation();
+
+        saveTaskListToStorage(handleTasks.getTaskList());
+
     });
 
     deleteTaskInfo.addEventListener('click', () => {
@@ -117,12 +167,14 @@ export default function HandleUI(handleTasks) {
 
         handleTasks.getTaskList().forEach(task => createTaskUI(task));
         updateLists();
-    
-        updateFilterSelected();
 
+        updateFilterSelected();
+        
         toggleTaskInformation();
         
         taskSelectedInfo = null;
+
+        saveTaskListToStorage(handleTasks.getTaskList());
     });
 
     cancelTaskInfo.addEventListener('click', () => {
@@ -152,6 +204,7 @@ export default function HandleUI(handleTasks) {
         checkbox.addEventListener('click', () => {
             task.flipIsComplete();
             taskDiv.classList.toggle('checked-task', task.getIsComplete());
+            saveTaskListToStorage(handleTasks.getTaskList());
         });
 
         const taskTitle = createElement('div', ['task-title']);
@@ -220,13 +273,12 @@ export default function HandleUI(handleTasks) {
             const task = new Task(taskTitle.value, false, taskDescription, taskPriorityValue, taskDueDateValue);
             handleTasks.addTask(task);
 
-            console.log(handleTasks.getTaskList());
-
             if (taskProjectValue !== '0') {
                 handleTasks.addProjectToTask(taskProjectValue, task);
             }
 
             createTaskUI(task);
+            saveTaskListToStorage(handleTasks.getTaskList());
 
             // Reset inputs
             taskTitle.value = '';
@@ -252,73 +304,110 @@ export default function HandleUI(handleTasks) {
             selectProject.classList.toggle('hidden', !hasProjects);
             projectLabel.classList.toggle('hidden', !hasProjects);
         };
-
         const closeModal = () => {
             modal.classList.add("hidden");
             overlay.classList.add("hidden");
         };
-
         openModalBtn.addEventListener("click", openModal);
         closeModalBtn.addEventListener("click", closeModal);
         overlay.addEventListener("click", closeModal);
     }
+    
+    
+    let projectInput = createElement('input', ['project-input'], {
+        type: 'text',
+        placeholder: 'Project name',
+        maxlength: '20'
+    });
+    let buttonsDiv = createElement('div', ['buttons-div']);
+    let projectInputButton = createElement('button', ['project-input-button']);
+    let cancelButton = createElement('button', ['project-input-button']);
+    let projectContainer = createElement('div', ['create-project-container']);
+
+    createButton.addEventListener('click', openCreateProjectModal);
+
+    function openCreateProjectModal(){
+        updateProjectFromInput();
+
+        if (inputOpen) return;
+        inputOpen = true;
+
+        projectInputButton.textContent = 'Create';
+
+        cancelButton.textContent = 'Cancel';
+
+        buttonsDiv.append(projectInputButton, cancelButton);
+
+        projectContainer.append(projectInput, buttonsDiv);
+
+        createButton.parentElement.appendChild(projectContainer);
+
+        projectInputButton.addEventListener('click', createProject);
+        projectInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') createProject();
+
+        });
+
+        cancelButton.addEventListener('click', () => {
+            projectContainer.remove();
+            inputOpen = false;
+        });
+        projectInput.focus();
+    }
+
+
+    function updateProjectFromInput() {
+        projectInput = createElement('input', ['project-input'], {
+            type: 'text',
+            placeholder: 'Project name',
+            maxlength: '20'
+        });
+        buttonsDiv = createElement('div', ['buttons-div']);
+        projectInputButton = createElement('button', ['project-input-button']);
+        cancelButton = createElement('button', ['project-input-button']);
+        projectContainer = createElement('div', ['create-project-container']);
+    }
 
     // Project Creation
     function createProject() {
-        createButton.addEventListener('click', () => {
-            if (inputOpen) return;
-            inputOpen = true;
-
-            const projectInput = createElement('input', ['project-input'], {
-                type: 'text',
-                placeholder: 'Project name',
-                maxlength: '20'
+        if (projectInput.value.trim()) {
+            const projectElement = createElement('li', ['project', 'option-task', 'anima-below'], {
+                'data-project': projectInput.value
             });
+            projectElement.textContent = projectInput.value;
 
-            const buttonsDiv = createElement('div', ['buttons-div']);
-            const projectInputButton = createElement('button', ['project-input-button']);
-            projectInputButton.textContent = 'Create';
+            projectList.appendChild(projectElement);
 
-            const cancelButton = createElement('button', ['project-input-button']);
-            cancelButton.textContent = 'Cancel';
+            const deleteProject = createElement('div');
+            deleteProject.textContent = 'x';
 
-            buttonsDiv.append(projectInputButton, cancelButton);
+            deleteProject.addEventListener('click', () => {
+                projectElement.remove();
+                // Remove project from the projects array
+                handleTasks.removeProjects(projectElement.textContent.slice(0, -1));
+                saveProjectsToStorage();
 
-            const projectContainer = createElement('div', ['create-project-container']);
-            projectContainer.append(projectInput, buttonsDiv);
-
-            createButton.parentElement.appendChild(projectContainer);
-
-            // Create project
-            const handleProjectInput = (event) => {
-                if (event.type === 'click' || (event.type === 'keydown' && event.key === 'Enter')) {
-                    if (projectInput.value.trim()) {
-                        const projectElement = createElement('li', ['project', 'option-task', 'anima-below'], {
-                            'data-project': projectInput.value
-                        });
-                        projectElement.textContent = projectInput.value;
-                        projectList.appendChild(projectElement);
-
-                        addProjectToOptions(projectInput.value);
-                        handleTasks.addProject(projectInput.value);
-
-                        projectContainer.remove();
-                        inputOpen = false;
-                        selectDaysFilterUI();
-                    }
+                // Prevent the event from bubbling up to the parent element
+                event.stopPropagation();
+                if(projectElement.classList.contains('selected')) {
+                    removeSelected(listOfOptions);
+                    listOfOptions[0].classList.add('selected');
+                    updateLists();
+                    updateFilterSelected();
                 }
-            };
-
-            projectInputButton.addEventListener('click', handleProjectInput);
-            projectInput.addEventListener('keydown', handleProjectInput);
-
-            cancelButton.addEventListener('click', () => {
-                projectContainer.remove();
-                inputOpen = false;
             });
 
-            projectInput.focus();
-        });
+            projectElement.appendChild(deleteProject);
+            
+
+            addProjectToOptions(projectInput.value);
+            handleTasks.addProject(projectInput.value);
+
+            projectContainer.remove();
+            inputOpen = false;
+            selectDaysFilterUI();
+            saveProjectsToStorage();
+        }
     }
     
     function loadFilteredTasks(filteredTasks) {
@@ -471,6 +560,7 @@ export default function HandleUI(handleTasks) {
     createProject();
     selectDaysFilterUI(listOfOptions);
     updateFilterSelected();
+    loadTaskListFromStorage();
 
     return {
         selectDaysFilterUI,

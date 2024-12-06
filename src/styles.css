@@ -179,7 +179,6 @@ body {
     font-weight: 700;
 }
 .selected::before {
-    content: "•";
     margin-right: 10px;
 }
 
@@ -232,6 +231,36 @@ body {
 .buttons-div {
     display: flex;
     gap: 10px;
+}
+
+.project.option-task.anima-below {
+    display: flex;
+    justify-content: space-between;
+}
+
+.project.option-task.anima-below div {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    margin-bottom: 2px;
+    border-radius: 20px;
+    background-color: var(--text-color-soft);
+    color: var(--menu-bg);
+    transform: translateY(-2px);
+}
+
+.project.option-task.anima-below:hover div {
+    cursor: pointer;
+    display: flex;
+    animation: fadeIn 0.5s;
+    margin-right: 10px;
+}
+
+.project.option-task.anima-below:hover div:hover {
+    transition: ease-in-out 0.2s all;
+    background-color: var(--button-red);
+    color: var(--text-color-intense);
 }
 
 .main-header {

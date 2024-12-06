@@ -36,7 +36,7 @@ export default class HandleTasks {
     }
 
     removeProjects(project) {
-        this.projects.filter((p) => p !== project)
+        this.projects = this.projects.filter((t) => t !== project)
         this.projectCount--
     }
 
