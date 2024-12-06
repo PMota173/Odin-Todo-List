@@ -379,6 +379,7 @@ export default function HandleUI(handleTasks) {
             projectList.appendChild(projectElement);
 
             const deleteProject = createElement('div');
+            
             deleteProject.textContent = 'x';
 
             deleteProject.addEventListener('click', () => {
@@ -398,7 +399,6 @@ export default function HandleUI(handleTasks) {
             });
 
             projectElement.appendChild(deleteProject);
-            
 
             addProjectToOptions(projectInput.value);
             handleTasks.addProject(projectInput.value);
@@ -486,16 +486,19 @@ export default function HandleUI(handleTasks) {
     // Updates the task quantity and the selected filter
     function updateFilterSelected() {
         filterSelected = document.querySelector('.selected')
-        loadSelectedFilter(filterSelected.textContent);
+        
+        loadSelectedFilter(filterSelected.classList.contains('project') ? filterSelected.textContent.slice(0, -1) : filterSelected.textContent);
+        
 
         const selectedFilter = document.querySelector('.filter-loaded');
         const quantity = document.querySelector('.tasks-quantity');
         const selectedOption = [...listOfOptions].find(op => op.classList.contains('selected'));
 
         if (selectedOption) {
-            selectedFilter.textContent = selectedOption.textContent;
+            selectedOption.classList.contains('project') ? selectedFilter.textContent = selectedOption.textContent.slice(0, -1) : selectedFilter.textContent = selectedOption.textContent;
             quantity.textContent = taskQuantity;
         }
+
     }
 
     function loadSelectedFilter(filterText) {
@@ -544,7 +547,7 @@ export default function HandleUI(handleTasks) {
     }
 
     function getOptions() {
-        return document.querySelectorAll('.option-task') || [];
+        return document.querySelectorAll('.option-task');
     }
 
     function addProjectToOptions(project) {
@@ -559,8 +562,8 @@ export default function HandleUI(handleTasks) {
     createTask();
     createProject();
     selectDaysFilterUI(listOfOptions);
-    updateFilterSelected();
     loadTaskListFromStorage();
+    updateFilterSelected();
 
     return {
         selectDaysFilterUI,
